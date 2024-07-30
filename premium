@@ -1,0 +1,1142 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "south bronx script PAID",
+   LoadingTitle = "south bronx script PAID",
+   LoadingSubtitle = "by veedsi",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "sb PAID"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("Autofarm", 4483362458) -- Title, Image
+
+
+local Section = Tab:CreateSection("autofarms")
+
+
+local Button = Tab:CreateButton({
+   Name = "Noclip ennable before autofarms",
+   Callback = function()
+   -- Get the local player
+local player = game.Players.LocalPlayer
+
+-- Function to enable or disable noclip
+local function setNoclip(enabled)
+    local character = player.Character
+    if not character then return end
+    
+    -- Set all parts of the character to noclip mode
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = not enabled
+        end
+    end
+end
+
+-- Function to continuously apply noclip mode
+local function applyNoclip()
+    while true do
+        -- Wait for the character to be fully loaded
+        if player.Character then
+            -- Apply noclip mode to the character
+            setNoclip(true)
+        end
+        wait(1)  -- Check every second to ensure noclip is applied
+    end
+end
+
+-- Handle character respawn and apply noclip mode
+player.CharacterAdded:Connect(function(character)
+    -- Wait for the character to be fully loaded
+    repeat wait() until character:FindFirstChildOfClass("Humanoid")
+    
+    -- Start applying noclip mode continuously
+    coroutine.wrap(applyNoclip)()
+end)
+
+-- If the player is already in the game, start applying noclip mode immediately
+if player.Character then
+    coroutine.wrap(applyNoclip)()
+end
+
+print("Noclip ready. Start Autofarm.")
+
+   end,
+})
+
+
+
+local Button = Tab:CreateButton({
+   Name = "TRASH AUTOFARM",
+   Callback = function()
+   -- Get the necessary services
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local Random = Random.new()  -- Create a Random instance for random number generation
+
+-- Clear any previous hold connections
+if _G.hold then
+    _G.hold:Disconnect()
+end
+
+-- Connect to ProximityPromptService to adjust the hold duration
+_G.hold = ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
+    prompt.HoldDuration = 0.1
+end)
+
+-- Function to delete a specific part from the workspace
+local function deleteTruckPart()
+    local part = game:GetService("Workspace"):FindFirstChild("cratetruck2")
+    
+    if part then
+        local truckProp = part:FindFirstChild("TruckProp")
+        if truckProp then
+            local meshPart = truckProp:FindFirstChild("MeshPart")
+            if meshPart and meshPart:IsA("BasePart") then
+                meshPart:Destroy()  -- Delete the MeshPart
+                print("Truck part deleted.")
+            else
+                warn("MeshPart not found or is not a BasePart.")
+            end
+        else
+            warn("TruckProp not found.")
+        end
+    else
+        warn("cratetruck2 not found.")
+    end
+end
+
+-- Execute the deletion function
+deleteTruckPart()
+
+-- Get the local player
+local player = Players.LocalPlayer
+
+-- Define the three CFrame positions
+local cframe1 = CFrame.new(699.285095, 3.53719997, 166.220108, -0.75687474, -1.16764767e-07, 0.653559983, -7.204752e-08, 1, 9.52228163e-08, -0.653559983, 2.49843701e-08, -0.75687474)
+local cframe2 = CFrame.new(738.593384, 3.41219568, 163.296951, 0.0526228361, 8.27483433e-08, -0.99861443, 5.31393347e-08, 1, 8.56633733e-08, 0.99861443, -5.75735584e-08, 0.0526228361)
+local cframe3 = CFrame.new(726.597046, 4.44065332, 215.042191, -0.882821798, 4.8518384e-08, -0.469708055, 4.94606489e-08, 1, 1.03328954e-08, 0.469708055, -1.41099603e-08, -0.882821798)
+
+-- Function to move the character to a target position with a specified speed
+local function moveToTarget(targetCFrame, speed)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+
+    -- Save the original walk speed
+    local originalSpeed = humanoid.WalkSpeed
+
+    -- Set the new walk speed
+    humanoid.WalkSpeed = speed
+
+    -- Move to the target CFrame position
+    humanoid:MoveTo(targetCFrame.Position)
+    humanoid.MoveToFinished:Wait()  -- Wait until the character has reached the target
+
+    -- Restore the original walk speed
+    humanoid.WalkSpeed = originalSpeed
+end
+
+-- Function to simulate pressing the number key 3
+local function pressNumberKey3()
+    print("Pressing number key 3")
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Three, false, game)
+    wait(0.1)  -- Ensure the key press is registered
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Three, false, game)
+end
+
+-- Function to simulate holding down the 'E' key
+local function holdEKey(duration)
+    print("Holding E key for " .. duration .. " seconds")
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+    wait(duration)
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+end
+
+-- Create GUI to display loop count and money earned
+local function createGui()
+    -- Ensure GUI is added to PlayerGui, not StarterGui
+    local playerGui = player:WaitForChild("PlayerGui")
+    
+    -- Create ScreenGui
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "LoopCounterGui"
+    screenGui.Parent = playerGui
+
+    -- Create TextLabel for Loop Counter
+    local counterLabel = Instance.new("TextLabel")
+    counterLabel.Name = "LoopCounterLabel"
+    counterLabel.Size = UDim2.new(0, 200, 0, 50)
+    counterLabel.Position = UDim2.new(0, 10, 0, 10)  -- Left side of the screen
+    counterLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    counterLabel.BackgroundTransparency = 0.5
+    counterLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    counterLabel.TextScaled = true
+    counterLabel.Text = "Loops: 0"
+    counterLabel.Parent = screenGui
+
+    -- Create TextLabel for Money Earned
+    local moneyLabel = Instance.new("TextLabel")
+    moneyLabel.Name = "MoneyLabel"
+    moneyLabel.Size = UDim2.new(0, 200, 0, 50)
+    moneyLabel.Position = UDim2.new(0, 10, 0, 70)  -- Below the loop counter
+    moneyLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    moneyLabel.BackgroundTransparency = 0.5
+    moneyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    moneyLabel.TextScaled = true
+    moneyLabel.Text = "Money Earned: $0"
+    moneyLabel.Parent = screenGui
+end
+
+-- Variable to keep track of the loop count and money earned
+local loopCount = 0
+local moneyEarned = 0
+
+-- Function to update the loop counter and money earned display
+local function updateGui()
+    local playerGui = player:FindFirstChild("PlayerGui")
+    if playerGui then
+        local counterLabel = playerGui:FindFirstChild("LoopCounterGui"):FindFirstChild("LoopCounterLabel")
+        local moneyLabel = playerGui:FindFirstChild("LoopCounterGui"):FindFirstChild("MoneyLabel")
+        
+        if counterLabel and moneyLabel then
+            counterLabel.Text = "Loops: " .. loopCount
+            moneyLabel.Text = "Money Earned: $" .. moneyEarned
+        else
+            warn("GUI elements not found.")
+        end
+    else
+        warn("PlayerGui not found.")
+    end
+end
+
+-- Function to get a random amount of money from the list
+local function getRandomMoneyAmount()
+    local moneyAmounts = {41, 44, 50, 45, 35, 49}
+    return moneyAmounts[Random:NextInteger(1, #moneyAmounts)]
+end
+
+-- Function to update the loop counter and add random money when reaching cframe3
+local function updateLoopAndMoney()
+    loopCount = loopCount + 1
+    local randomMoney = getRandomMoneyAmount()
+    moneyEarned = moneyEarned + randomMoney
+    updateGui()
+end
+
+-- Main loop to move between the three CFrames and perform actions
+local function moveInLoop()
+    local targetCFrames = {cframe1, cframe2, cframe3, cframe2}  -- Use the CFrame values
+    local currentIndex = 1
+    local walkingSpeed = 22  -- Set walking speed to 22
+
+    while true do
+        local targetCFrame = targetCFrames[currentIndex]
+        
+        print("Moving to target CFrame:", targetCFrame.Position)
+        moveToTarget(targetCFrame, walkingSpeed)
+        
+        if currentIndex == 1 or currentIndex == 4 then
+            holdEKey(0.3)  -- Hold down 'E' key for 0.3 seconds at cframe1 and cframe2
+        elseif currentIndex == 3 then
+            pressNumberKey3()  -- Press number key 3 before starting to move to cframe2
+            wait(0.1)  -- Ensure key press is processed
+            holdEKey(0.3)  -- Hold down 'E' key for 0.3 seconds at cframe3
+            updateLoopAndMoney()  -- Update loop counter and add random money when reaching cframe3
+        end
+        
+        -- Move to the next target
+        currentIndex = currentIndex % #targetCFrames + 1  -- Toggle between 1, 2, 3, and 4
+        
+        -- Add a short wait to prevent rapid looping issues
+        wait(0.5)
+    end
+end
+
+-- Run the GUI creation and loop when the character spawns
+player.CharacterAdded:Connect(function()
+    createGui()
+    moveInLoop()
+end)
+
+-- Run the GUI creation and loop immediately if the character is already present
+if player.Character then
+    createGui()
+    moveInLoop()
+end
+
+print("Hello World!")
+
+   end,
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Tab = Window:CreateTab("PLAYER", 4483362458) -- Title, Image
+
+
+local Section = Tab:CreateSection("PLAYER SCRIPTS")
+
+local Button = Tab:CreateButton({
+   Name = "SPEED HACK",
+   Callback = function()
+   -- Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+
+-- GUI setup
+local ScreenGui = Instance.new("ScreenGui")
+local SpeedLabel = Instance.new("TextLabel")
+
+ScreenGui.Name = "SpeedGui"
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
+
+SpeedLabel.Name = "SpeedLabel"
+SpeedLabel.Parent = ScreenGui
+SpeedLabel.Size = UDim2.new(0, 200, 0, 50)
+SpeedLabel.Position = UDim2.new(0.5, -100, 0, 20)
+SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+SpeedLabel.BackgroundTransparency = 0.5
+SpeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpeedLabel.TextScaled = true
+SpeedLabel.Text = "Speed: " .. Humanoid.WalkSpeed
+
+-- Store the original walk speed
+local normalWalkSpeed = 18
+local sprintWalkSpeed = 22
+
+-- Function to update the walk speed
+local function updateWalkSpeed()
+    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+        Humanoid.WalkSpeed = sprintWalkSpeed
+    else
+        Humanoid.WalkSpeed = normalWalkSpeed
+    end
+    -- Update the speed displayed in the GUI
+    SpeedLabel.Text = "Speed: " .. Humanoid.WalkSpeed
+end
+
+-- Connect the function to the RenderStepped event to check continuously
+RunService.RenderStepped:Connect(updateWalkSpeed)
+
+-- Optionally, restore to original walk speed on character respawn
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    Humanoid = newCharacter:WaitForChild("Humanoid")
+    if Humanoid then
+        -- Ensure the script works with the new character
+        Humanoid.WalkSpeed = normalWalkSpeed
+        updateWalkSpeed()
+    end
+end)
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "INSTANT LOOT",
+   Callback = function()
+   local ProximityPromptService = game:GetService("ProximityPromptService")
+
+-- Disconnect the existing connection if it exists
+if _G.hold then _G.hold:Disconnect() end
+
+-- Connect to the ProximityPromptService's PromptButtonHoldBegan event
+_G.hold = ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
+    prompt.HoldDuration = 0
+end)
+
+-- The function that takes place when the button is pressed
+-- Here you can add any additional functionality you need
+
+print("Proximity prompt hold duration set to 0.")
+
+   end,
+})
+
+local Tab = Window:CreateTab("ESP", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("ESP")
+
+local Button = Tab:CreateButton({
+   Name = "PLAYER ESP HOTKEY = E",
+   Callback = function()
+   -- Services and Local Variables
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = game.Workspace.CurrentCamera
+
+-- Colors
+local OutlineColor = Color3.fromRGB(255, 0, 0) -- Red
+local TextColor = Color3.fromRGB(255, 255, 255) -- White
+
+-- Toggle State
+local espEnabled = true
+
+-- Function to create head outline
+local function createHeadOutline(player)
+    local character = player.Character
+    if not character then return end
+    
+    local head = character:FindFirstChild("Head")
+    if not head then return end
+
+    local outline = Instance.new("BoxHandleAdornment")
+    outline.Name = "HeadOutline"
+    outline.Size = head.Size
+    outline.Adornee = head
+    outline.AlwaysOnTop = true
+    outline.ZIndex = 5
+    outline.Transparency = 0.5
+    outline.Color3 = OutlineColor
+    outline.Parent = head
+end
+
+-- Function to create distance label
+local function createDistanceLabel(player)
+    local character = player.Character
+    if not character then return end
+
+    local head = character:FindFirstChild("Head")
+    if not head then return end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "DistanceLabel"
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.Adornee = head
+    billboard.AlwaysOnTop = true
+    billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset to position above the head
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = TextColor
+    textLabel.TextScaled = true
+    textLabel.TextSize = 8 -- Smaller text size
+    textLabel.TextStrokeTransparency = 0.8 -- Optional: adds stroke around text for better readability
+    textLabel.Text = player.Name -- Set initial text to player name
+    textLabel.Parent = billboard
+
+    billboard.Parent = head
+end
+
+-- Function to handle when a player is added
+local function onPlayerAdded(player)
+    if player ~= LocalPlayer then
+        player.CharacterAdded:Connect(function(character)
+            if espEnabled then
+                createHeadOutline(player)
+                createDistanceLabel(player)
+            end
+        end)
+        if player.Character then
+            if espEnabled then
+                createHeadOutline(player)
+                createDistanceLabel(player)
+            end
+        end
+    end
+end
+
+-- Initial check for existing players
+for _, player in ipairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        if espEnabled then
+            createHeadOutline(player)
+            createDistanceLabel(player)
+        end
+    end
+end
+
+-- Listen for new players
+Players.PlayerAdded:Connect(onPlayerAdded)
+
+-- Toggle ESP on/off
+UserInputService.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.E then
+        espEnabled = not espEnabled
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer then
+                local character = player.Character
+                if character then
+                    local head = character:FindFirstChild("Head")
+                    if head then
+                        local outline = head:FindFirstChild("HeadOutline")
+                        local billboard = head:FindFirstChild("DistanceLabel")
+                        
+                        if espEnabled then
+                            if not outline then createHeadOutline(player) end
+                            if not billboard then createDistanceLabel(player) end
+                        else
+                            if outline then outline:Destroy() end
+                            if billboard then billboard:Destroy() end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)
+
+-- Update loop to ensure outlines and distance labels are updated
+RunService.RenderStepped:Connect(function()
+    if not espEnabled then return end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            local character = player.Character
+            if character and character:FindFirstChild("Head") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Head") then
+                local head = character.Head
+                local outline = head:FindFirstChild("HeadOutline")
+                local billboard = head:FindFirstChild("DistanceLabel")
+
+                local position, onScreen = Camera:WorldToViewportPoint(head.Position)
+                local distance = (LocalPlayer.Character.Head.Position - head.Position).Magnitude
+
+                if onScreen and distance < 1000 then -- Ensure the player is within a reasonable distance
+                    if outline then outline.Visible = true end
+                    if billboard then
+                        billboard.Enabled = true
+                        billboard.TextLabel.Text = string.format("%s\n%.2f studs", player.Name, distance)
+                        billboard.TextLabel.TextTransparency = math.clamp((distance / 1000) * 0.6, 0.4, 1)
+                    end
+                else
+                    if outline then outline.Visible = false end
+                    if billboard then billboard.Enabled = false end
+                end
+            else
+                if character and character:FindFirstChild("Head") then
+                    if espEnabled then
+                        createHeadOutline(player)
+                        createDistanceLabel(player)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "SHOW GUNS",
+   Callback = function()
+   local excludedTools = {
+    "Card", "Hot Chips", "Potato Chips", "Phone", "Fist",
+    "Crate", "TrashBag", "Knife", "Fake ID", "Standard Clip",
+    "Potato", "Drum Magazine", "Extended Clip", "Speed Loader",
+    "Ski Mask", "Flour", "Heavy Magazine", "Bacon Egg And Cheese"
+}
+local showGunsEnabled = true
+
+local function isExcludedTool(toolName)
+    for _, excludedName in ipairs(excludedTools) do
+        if toolName == excludedName then
+            return true
+        end
+    end
+    return false
+end
+
+local function updatePlayerTool(player)
+    if not showGunsEnabled then return end
+
+    local character = player.Character
+    if not character then return end
+
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+
+    local currentTool = humanoid.Parent:FindFirstChildOfClass("Tool")
+
+    local billboardName = "ToolDisplay"
+    local billboard = character:FindFirstChild(billboardName)
+    if not billboard then
+        billboard = Instance.new("BillboardGui")
+        billboard.Name = billboardName
+        billboard.AlwaysOnTop = true
+        billboard.Size = UDim2.new(3, 0, 1, 0)
+        billboard.StudsOffset = Vector3.new(0, 3, 0) 
+
+        local textLabel = Instance.new("TextLabel", billboard)
+        textLabel.Size = UDim2.new(1, 0, 1, 0)
+        textLabel.TextSize = 20
+        textLabel.TextStrokeTransparency = 0.5
+        textLabel.BackgroundTransparency = 1
+        textLabel.Font = Enum.Font.SourceSansBold
+
+        billboard.Parent = character
+    end
+
+    local textLabel = billboard.TextLabel
+    if currentTool then
+        local toolName = currentTool.Name
+
+        if isExcludedTool(toolName) then
+            textLabel.Text = ""
+        else
+            textLabel.Text = toolName
+
+            if string.find(toolName, "Micro ARP") or
+               string.find(toolName, "AK Draco") then
+                textLabel.TextColor3 = Color3.new(1, 0, 0)  -- Red color
+            elseif string.find(toolName, "MCX") or
+                   string.find(toolName, "Draco") or
+                   string.find(toolName, "Tec-9") or
+                   string.find(toolName, "Springfield XD MOD") or
+                   string.find(toolName, "AR Pistol") or
+                   string.find(toolName, "P320E") or
+                   string.find(toolName, "FN57") or
+                   string.find(toolName, "G19EXT") then
+                textLabel.TextColor3 = Color3.new(0, 1, 0)  -- Green color
+            elseif string.find(toolName, "Drum") then
+                textLabel.TextColor3 = Color3.new(1, 0.8, 0)  -- Gold color
+            else
+                textLabel.TextColor3 = Color3.new(1, 1, 1)  -- Default color
+            end
+        end
+    else
+        textLabel.Text = ""
+    end
+end
+
+local function updatePlayerToolsLoop()
+    while true do
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            updatePlayerTool(player)
+        end
+        wait(0.1)  -- Update interval in seconds
+    end
+end
+
+spawn(updatePlayerToolsLoop)
+
+local function onCharacterAdded(character)
+    updatePlayerTool(character.Parent)
+end
+
+
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        onCharacterAdded(character)
+    end)
+end)
+
+local function toggleShowGuns(state)
+    showGunsEnabled = state
+
+    -- Enable or disable the display for existing players
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        if showGunsEnabled then
+            updatePlayerTool(player)
+        else
+            local billboard = player.Character:FindFirstChild("ToolDisplay")
+            if billboard then
+                billboard:Destroy()
+            end
+        end
+    end
+end
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+    Name = "PLAYER CHARMS",
+    Callback = function()
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player.Character and player.Character ~= game.Players.LocalPlayer.Character then
+                -- Create a highlight effect for the player's character
+                local highlight = Instance.new("Highlight")
+                highlight.Name = "-P"
+                highlight.FillTransparency = 0.5 -- Set to visible (0 is fully opaque, 1 is fully transparent)
+                highlight.OutlineTransparency = 0.5 -- Set to visible outline
+                highlight.Parent = player.Character
+            end
+        end
+    end,
+})
+
+
+
+
+
+
+local Button = Tab:CreateButton({
+   Name = "PLAYER CHARM OFF",
+   Callback = function()
+   for _, player in pairs(game.Players:GetPlayers()) do
+    if player.Character and player.Character:FindFirstChild("-P") then
+        player.Character["-P"]:Destroy()
+    end
+end
+   end,
+})
+
+
+local Tab = Window:CreateTab("AIMLOCK", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("AIMLOCK")
+
+
+local Button = Tab:CreateButton({
+   Name = "AIMLOCK HOTKEY = Q",
+   Callback = function()
+   -- Configuration
+getgenv().OldAimPart = "HumanoidRootPart"
+getgenv().AimPart = "HumanoidRootPart"
+getgenv().AimlockKey = "q"
+getgenv().AimRadius = 100
+getgenv().ThirdPerson = true
+getgenv().FirstPerson = true
+getgenv().TeamCheck = false
+getgenv().PredictMovement = true
+getgenv().PredictionVelocity = 6.612
+getgenv().CheckIfJumped = false
+getgenv().Smoothness = true
+getgenv().SmoothnessAmount = 0.5
+
+-- Services and Local Variables
+local Players = game:GetService("Players")
+local Uis = game:GetService("UserInputService")
+local RService = game:GetService("RunService")
+local Client = Players.LocalPlayer
+local Mouse = Client:GetMouse()
+local Camera = workspace.CurrentCamera
+local Aimlock = true
+local MousePressed = false
+local AimlockTarget
+local CanNotify = false
+
+-- Utility Functions
+getgenv().WorldToViewportPoint = function(P)
+    return Camera:WorldToViewportPoint(P)
+end
+
+getgenv().WorldToScreenPoint = function(P)
+    return Camera:WorldToScreenPoint(P)
+end
+
+getgenv().GetObscuringObjects = function(T)
+    if T and T:FindFirstChild(getgenv().AimPart) and Client and Client.Character:FindFirstChild("Head") then
+        local RayPos = workspace:FindPartOnRay(Ray.new(
+            T[getgenv().AimPart].Position, (Client.Character.Head.Position - T[getgenv().AimPart].Position).unit)
+        )
+        if RayPos then
+            return RayPos:IsDescendantOf(T)
+        end
+    end
+end
+
+getgenv().GetNearestTarget = function()
+    local players = Players:GetPlayers()
+    local PLAYER_HOLD = {}
+    local DISTANCES = {}
+    for _, v in ipairs(players) do
+        if v ~= Client and v.Character and v.Character:FindFirstChild("Head") then
+            local AIM = v.Character:FindFirstChild("Head")
+            if AIM then
+                local DISTANCE = (AIM.Position - Camera.CFrame.p).Magnitude
+                local RAY = Ray.new(Camera.CFrame.p, (Mouse.Hit.p - Camera.CFrame.p).unit * DISTANCE)
+                local HIT, POS = workspace:FindPartOnRay(RAY, workspace)
+                local DIFF = (POS - AIM.Position).Magnitude
+                if (getgenv().TeamCheck and v.Team ~= Client.Team) or not getgenv().TeamCheck then
+                    PLAYER_HOLD[v.Name] = {dist = DISTANCE, plr = v, diff = DIFF}
+                    table.insert(DISTANCES, DIFF)
+                end
+            end
+        end
+    end
+    if #DISTANCES == 0 then return nil end
+    local L_DISTANCE = math.min(unpack(DISTANCES))
+    if L_DISTANCE > getgenv().AimRadius then return nil end
+    for _, v in pairs(PLAYER_HOLD) do
+        if v.diff == L_DISTANCE then return v.plr end
+    end
+    return nil
+end
+
+-- Highlight and Name Display Functions
+local function createHighlight(targetCharacter)
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "-P"
+    highlight.FillTransparency = 1
+    highlight.Parent = targetCharacter
+
+    local hue = 0
+    local connection
+    connection = RService.RenderStepped:Connect(function()
+        if not targetCharacter.Parent or not targetCharacter:FindFirstChild(getgenv().AimPart) then
+            highlight:Destroy()
+            connection:Disconnect()
+        else
+            hue = hue + 0.001 -- Adjust this value to change the speed
+            if hue > 1 then hue = 0 end
+            highlight.FillColor = Color3.fromHSV(hue, 1, 1)
+        end
+    end)
+
+    return highlight
+end
+
+local function createNameDisplay(targetCharacter)
+    local head = targetCharacter:FindFirstChild("Head")
+    if not head then return end
+
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Name = "NameDisplay"
+    billboardGui.Adornee = head
+    billboardGui.Size = UDim2.new(0, 100, 0, 50) -- Size of the BillboardGui
+    billboardGui.StudsOffset = Vector3.new(0, 3, 0) -- Position above the head
+    billboardGui.AlwaysOnTop = true
+    billboardGui.Parent = head
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Text = targetCharacter.Name
+    textLabel.Size = UDim2.new(1, 0, 1, 0) -- Fill the BillboardGui
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1) -- White text
+    textLabel.TextStrokeColor3 = Color3.new(0, 0, 0) -- Black outline
+    textLabel.TextStrokeTransparency = 0.5 -- Transparency of the outline
+    textLabel.TextScaled = true
+    textLabel.TextSize = 14 -- Adjust text size as needed
+    textLabel.Parent = billboardGui
+
+    -- Cleanup when the target character is no longer valid
+    local connection
+    connection = RService.RenderStepped:Connect(function()
+        if not targetCharacter.Parent or not head then
+            billboardGui:Destroy()
+            connection:Disconnect()
+        end
+    end)
+
+    return billboardGui
+end
+
+-- Function to switch to a new target if the current one is dead
+local function checkAndSwitchTarget()
+    if AimlockTarget and AimlockTarget.Character and AimlockTarget.Character:FindFirstChild("Humanoid") then
+        local humanoid = AimlockTarget.Character.Humanoid
+        if humanoid.Health <= 0 then
+            AimlockTarget = getgenv().GetNearestTarget()
+            if AimlockTarget then
+                if currentHighlight then
+                    currentHighlight:Destroy()
+                end
+                if currentNameDisplay then
+                    currentNameDisplay:Destroy()
+                end
+                currentHighlight = createHighlight(AimlockTarget.Character)
+                currentNameDisplay = createNameDisplay(AimlockTarget.Character)
+            end
+        end
+    end
+end
+
+local currentHighlight, currentNameDisplay
+
+-- Key Binding for Aimlock
+Mouse.KeyDown:Connect(function(a)
+    if not Uis:GetFocusedTextBox() then
+        if a == getgenv().AimlockKey then
+            if AimlockTarget == nil then
+                local Target = getgenv().GetNearestTarget()
+                if Target then
+                    AimlockTarget = Target
+                    MousePressed = true
+                    if currentHighlight then
+                        currentHighlight:Destroy()
+                    end
+                    if currentNameDisplay then
+                        currentNameDisplay:Destroy()
+                    end
+                    currentHighlight = createHighlight(AimlockTarget.Character)
+                    currentNameDisplay = createNameDisplay(AimlockTarget.Character)
+                end
+            else
+                AimlockTarget = nil
+                MousePressed = false
+                if currentHighlight then
+                    currentHighlight:Destroy()
+                    currentHighlight = nil
+                end
+                if currentNameDisplay then
+                    currentNameDisplay:Destroy()
+                    currentNameDisplay = nil
+                end
+            end
+        end
+    end
+end)
+
+-- Render Stepped Function for Aiming
+RService.RenderStepped:Connect(function()
+    if Aimlock and MousePressed and AimlockTarget and AimlockTarget.Character and AimlockTarget.Character:FindFirstChild(getgenv().AimPart) then
+        local aimPos = AimlockTarget.Character[getgenv().AimPart].Position
+        if getgenv().PredictMovement then
+            aimPos = aimPos + AimlockTarget.Character[getgenv().AimPart].Velocity / getgenv().PredictionVelocity
+        end
+        local aimCFrame = CFrame.new(Camera.CFrame.p, aimPos)
+        if getgenv().Smoothness then
+            Camera.CFrame = Camera.CFrame:Lerp(aimCFrame, getgenv().SmoothnessAmount)
+        else
+            Camera.CFrame = aimCFrame
+        end
+    end
+
+    if getgenv().CheckIfJumped then
+        if AimlockTarget and AimlockTarget.Character and AimlockTarget.Character:FindFirstChild("Humanoid") and AimlockTarget.Character.Humanoid.FloorMaterial == Enum.Material.Air then
+            getgenv().AimPart = "HumanoidRootPart"
+        else
+            getgenv().AimPart = getgenv().OldAimPart
+        end
+    end
+
+    -- Check if the target is dead and switch if necessary
+    checkAndSwitchTarget()
+end)
+
+   end,
+})
+
+
+local Tab = Window:CreateTab("AIMBOT", 4483362458) -- Title, Image
+
+
+local Section = Tab:CreateSection("AIMBOT SCRIPT")
+
+
+
+local Button = Tab:CreateButton({
+   Name = "AIMBOT",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/uchoroid/UniversalAimbotEsp/main/Universal-Aimbot-Esp", true))()
+   end,
+})
+
+
+
+
+
+
+
+local Tab = Window:CreateTab("TOOLS", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("DELETE TOOL")
+
+
+
+local Button = Tab:CreateButton({
+   Name = "DELETE TOOL HOTKEY = J",
+   Callback = function()
+   _G.key = "J"
+
+local lp, mouse, uis do
+  lp = game:GetService("Players").LocalPlayer
+  mouse = lp:GetMouse()
+  uis =  game:GetService("UserInputService")
+end
+
+uis.InputBegan:Connect(function(input, gameProcessedEvent)
+     if gameProcessedEvent then return end
+     if input.KeyCode == Enum.KeyCode[_G.key] and mouse.Target then
+         mouse.Target:Destroy()
+     end
+end)
+   end,
+})
+
+
+local Tab = Window:CreateTab("OTHER", 4483362458) -- Title, Image
+
+local Section = Tab:CreateSection("OTHER SCRIPTS")
+
+
+local Button = Tab:CreateButton({
+   Name = "REMOVE SKY",
+   Callback = function()
+   -- Get the Lighting service
+local Lighting = game:GetService("Lighting")
+
+-- Check if there is a Sky object in Lighting
+local sky = Lighting:FindFirstChildOfClass("Sky")
+
+-- Remove the Sky object if it exists
+if sky then
+    sky:Destroy()
+end
+
+   end,
+})
+
+
+
+local Button = Tab:CreateButton({
+   Name = "DAY",
+   Callback = function()
+   -- Get the Lighting service
+local Lighting = game:GetService("Lighting")
+
+-- Set the time of day to noon (12:00 PM)
+Lighting.TimeOfDay = "12:00:00"
+
+-- Optionally set other properties to simulate daytime
+Lighting.Brightness = 2 -- Increase the brightness for daytime effect
+Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255) -- Bright white ambient light
+
+   end,
+})
+
+
+
+
+
+local Button = Tab:CreateButton({
+   Name = "NIGHT",
+   Callback = function()
+   -- Get the Lighting service
+local Lighting = game:GetService("Lighting")
+
+-- Set the time of day to midnight (00:00:00)
+Lighting.TimeOfDay = "00:00:00"
+
+-- Adjust other properties for nighttime
+Lighting.Brightness = 0.1 -- Lower the brightness for a night effect
+Lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 50) -- Dark blue ambient light
+Lighting.Ambient = Color3.fromRGB(20, 20, 60) -- Slightly brighter ambient light to enhance the night effect
+Lighting.FogColor = Color3.fromRGB(0, 0, 60) -- Darker fog color for a night effect
+Lighting.FogStart = 0 -- Adjust as needed
+Lighting.FogEnd = 1000 -- Adjust as needed
+
+   end,
+})
+
+
+
+
+local Button = Tab:CreateButton({
+   Name = "PARTY MODE",
+   Callback = function()
+   -- Define the GUI color change speed and the music ID
+local colorChangeSpeed = 0.01
+local musicId = "rbxassetid://5409360995"
+local transparency = 0.80 -- Almost fully transparent
+
+-- Create the GUI
+local function createFullScreenGui()
+    -- Create the ScreenGui
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "FullScreenGui"
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    -- Create the Frame
+    local frame = Instance.new("Frame")
+    frame.Name = "FullScreenFrame"
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Start with red
+    frame.BackgroundTransparency = transparency
+    frame.Parent = screenGui
+
+    return frame
+end
+
+-- Function to play the new sound
+local function playNewSound()
+    local newSound = Instance.new("Sound")
+    newSound.SoundId = musicId
+    newSound.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    newSound.Volume = 1
+    newSound:Play()
+end
+
+-- Function to change the color of the Frame
+local function startColorCycle(frame)
+    local hue = 0
+    game:GetService("RunService").RenderStepped:Connect(function()
+        hue = (hue + colorChangeSpeed) % 1
+        frame.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+    end)
+end
+
+-- Main execution
+local frame = createFullScreenGui()
+playNewSound()
+startColorCycle(frame)
+
+
+
+
+
+
+
+   end,
+})
+
+
+
+
+
+
+
